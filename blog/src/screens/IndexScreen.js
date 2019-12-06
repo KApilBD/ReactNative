@@ -9,7 +9,7 @@ const IndexScreen = () => {
 
     return (
         <View>
-            <Text>Index Screen {data.length}</Text>
+            <Text>Index Screen {state.length}</Text>
             <Button title="Add Post" onPress = {() => addBlogPost()} />
             {/* or
             <Button title="Add Post" onPress = {addBlogPost} />
