@@ -9,31 +9,51 @@ const blogReducer = (state, action) => {
         case 'add_blogpost':
             return [
                 ...state,
-                { 
-                    title: `Blog post # ${state.length + 1}`, 
-                    id: Math.floor(Math.random() * 99999) 
+                {
+                    title: action.payload.title,
+                    id: Math.floor(Math.random() * 99999),
+                    content: action.payload.content
                 }
             ];
+        case 'edit_blogpost':
+            return state.map((blogpost) => {
+                return blogpost.id === action.payload.id ? action.payload : blogpost
+            });
         case 'delete_blogpost':
-            console.log("state", state, action.payload)
-            return state.filter((blogpost)=> blogpost.id !== action.payload);
+            return state.filter((blogpost) => blogpost.id !== action.payload);
         default:
             return state;
     }
 }
 
 const addBlogPost = (dispatch) => {
-    return () => {
-        dispatch({ type: "add_blogpost" });
+    return (title, content, callback) => {
+        dispatch({ type: "add_blogpost", payload: { title, content } });
+        if (callback) {
+            callback();
+        }
     };
 }
 const deleteBlogPost = (dispatch) => {
     return (id) => {
-        dispatch({type: "delete_blogpost", payload:id});
+        dispatch({ type: "delete_blogpost", payload: id });
     }
 }
 
-export const { Context, Provider } = createDataContext(blogReducer, { addBlogPost, deleteBlogPost }, []);
+const editBlogPost = (dispatch) => {
+    return (id, title, content, callback) => {
+        dispatch({ type: "edit_blogpost", payload: { id, title, content } });
+        if (callback) {
+            callback();
+        }
+    }
+}
+
+export const { Context, Provider } = createDataContext(
+    blogReducer,
+    { addBlogPost, deleteBlogPost, editBlogPost },
+    [{ title: "Test Post", content: 'Test Content', id: 1 }]
+);
 
 // export const BlogProvider = ({ children }) => {
 //     const [blogPosts, dispatch] = useReducer(blogReducer, []);
