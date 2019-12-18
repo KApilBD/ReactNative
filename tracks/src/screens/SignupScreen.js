@@ -1,39 +1,25 @@
-import React, { useState, useContext } from 'react';
-import { View, StyleSheet, } from 'react-native';
-import { Text, Input, Button } from 'react-native-elements';
+import React, { useContext } from 'react';
+import { View, StyleSheet } from 'react-native';
 
-import Spacer from '../components/Spacer';
+import AuthForm from '../components/AuthForm';
+import NavLink from '../components/NavLink';
 import { Context as authContext } from '../context/authContext';
 
 const SignupScreen = ({ navigation }) => {
     const { state, signup } = useContext(authContext);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+
     return (
         <View style={styles.container} >
-            <Spacer>
-                <Text h3 >Sign Up for Tracker</Text>
-            </Spacer>
-            <Input
-                label="Email"
-                autoCapitalize="none"
-                autoCorrect={false}
-                value={email}
-                onChangeText={setEmail}
+            <AuthForm
+                headerText="Sign Up for Tracker"
+                errorMessage={state.errorMessage}
+                submitButtonText="Sign Up"
+                onSubmit={signup}
             />
-            <Spacer />
-            <Input
-                label="Password"
-                autoCapitalize="none"
-                autoCorrect={false}
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
+            <NavLink
+                text="Already have an account? Sign in instead"
+                routeName='Signin'
             />
-            {state.errorMessage ? <Text style={styles.errorMessage}>{state.errorMessage}</Text> : null}
-            <Spacer>
-                <Button title="Sign Up" onPress={() => signup({ email, password })} />
-            </Spacer>
         </View>
     );
 };
@@ -49,12 +35,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         marginBottom: 180
-    },
-    errorMessage:{
-        fontSize:16,
-        color:'red',
-        marginLeft: 15,
-        marginTop:15
     }
 });
 
